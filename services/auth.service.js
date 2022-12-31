@@ -53,7 +53,7 @@ const requestPasswordReset = async (email) => {
     },
     "./template/requestResetPassword.handlebars"
   );
-  return link;
+  return { link };
 };
 
 const resetPassword = async (userId, token, password) => {
@@ -62,6 +62,8 @@ const resetPassword = async (userId, token, password) => {
   if (!passwordResetToken) {
     throw new Error("Invalid or expired password reset token");
   }
+
+  console.log(passwordResetToken.token, token);
 
   const isValid = await bcrypt.compare(token, passwordResetToken.token);
 
@@ -90,7 +92,7 @@ const resetPassword = async (userId, token, password) => {
 
   await passwordResetToken.deleteOne();
 
-  return true;
+  return { message: "Password reset was successful" };
 };
 
 module.exports = {
